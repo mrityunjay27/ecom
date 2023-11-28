@@ -2,6 +2,12 @@ from django.db import models
 
 
 # Create your models here.
+class Promotion(models.Model):
+    description = models.CharField(max_length=255)
+    discount = models.FloatField()
+    # product_set, created by Django representing products that
+    # promotion is applied to, else we can use 'related_name'
+    # attribute in Product class
 
 class Collection(models.Model):
     title = models.CharField(max_length=255)
@@ -14,6 +20,7 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    promotions = models.ManyToManyField(Promotion)
 
 
 class Customer(models.Model):
