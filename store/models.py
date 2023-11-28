@@ -9,8 +9,12 @@ class Promotion(models.Model):
     # promotion is applied to, else we can use 'related_name'
     # attribute in Product class
 
+
 class Collection(models.Model):
     title = models.CharField(max_length=255)
+    featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+')
+    # + sign indicate we don't care about reverse relation that will be created by Django in Product class.
+    # because by featured_product, it will try to create a new field collection in Product, but we already have one.
 
 
 class Product(models.Model):
