@@ -6,7 +6,7 @@ class Promotion(models.Model):
     description = models.CharField(max_length=255)
     discount = models.FloatField()
     # product_set, created by Django representing products that
-    # promotion is applied to, else we can use 'related_name'
+    # promotion is applied to, else we can uFse 'related_name'
     # attribute in Product class
 
 
@@ -51,6 +51,7 @@ class Address(models.Model):
     # customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)  # one address per customer
     #  one-to-many relationship
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    zip = models.CharField(max_length=10, null=True)
 
 
 class Order(models.Model):
