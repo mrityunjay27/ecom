@@ -44,12 +44,6 @@ class Customer(models.Model):
     birth_data = models.DateField(null=True)
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOICES, default=MEMBERSHIP_BRONZE)
 
-    class Meta:
-        db_table = 'store_customers'  # against the Django convention, has to singular
-        indexes = [
-            models.Index(fields=['last_name', 'first_name'])
-        ]
-
 
 class Address(models.Model):
     street = models.CharField(max_length=255)
