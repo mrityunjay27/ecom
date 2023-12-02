@@ -35,4 +35,12 @@ def say_hello(request):
     exists = Product.objects.filter(pk=0).exists()
     # exists return boolean.
 
-    return render(request, 'hello.html', {'name': 'Rambo'})
+    # Field Lookups
+    qs1 = Product.objects.filter(unit_price__gt=20)
+    qs2 = Product.objects.filter(unit_price__range=(20, 30))
+    qs3 = Product.objects.filter(collection__id__range=(1, 3))
+    qs4 = Product.objects.filter(title__icontains="coffee")
+    qs5 = Product.objects.filter(last_update__year=2021)
+    qs6 = Product.objects.filter(description__isnull=True)
+
+    return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs5)})
