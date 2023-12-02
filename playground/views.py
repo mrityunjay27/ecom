@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from store.models import Product
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 
 # Create your views here.
@@ -42,5 +43,13 @@ def say_hello(request):
     qs4 = Product.objects.filter(title__icontains="coffee")
     qs5 = Product.objects.filter(last_update__year=2021)
     qs6 = Product.objects.filter(description__isnull=True)
+
+    # Complex QuerySet
+    # qs7 and qs8 are same (and)
+    qs7 = Product.objects.filter(inventory__lt=10, unit_price__lt=20)
+    qs8 = Product.objects.filter(inventory__lt=10).filter(unit_price__lt=20)
+
+    # OR |, ~, &
+    qs8 = Product.objects.filter(Q(inventory__lt=10) | ~Q(unit_price__lt=20))
 
     return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs5)})
