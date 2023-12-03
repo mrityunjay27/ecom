@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from store.models import Product, OrderItem
+from store.models import Product, OrderItem, Order
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F
 
@@ -90,4 +90,20 @@ def say_hello(request):
     # Defer, specifies fields which we don't want to read from db, behaviour is same as only
     qs17 = Product.objects.defer('title')
 
-    return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs_product)})
+    # Selecting related objects
+    # 1. select_related, creates a join between table. It preloads other table also.
+    # We can extend this by preloading specific field ,ex collection__title
+    # We use this one other end of relationship has only one instance, ex Collection
+    qs18 = Product.objects.select_related('collection').all()
+
+    # 2. prefetch_related,
+    # We use this when other end of relationship has only multiple instances, ex Promotions on products.
+    qs19 = Product.objects.prefetch_related('promotions').all()
+
+    # We can chain this also
+    qs20 = Product.objects.prefetch_related('promotions').select_related('collection').all()
+
+    # Ques: Get the last 5 orders with their customers and items (incl product)
+    qs21 = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+
+    return render(request, 'hello.html', {'name': 'Rambo', 'orders': list(qs21)})
