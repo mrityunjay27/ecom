@@ -58,5 +58,15 @@ def say_hello(request):
     # also work for referencing related table's fields
     qs10 = Product.objects.filter(inventory=F('collection__id'))
 
+    # Sorting data
+    qs11 = Product.objects.order_by('unit_price', '-title')
+    # p1 is same as p2
+    p1 = Product.objects.order_by('unit_price')[0]
+    p2 = Product.objects.earliest('unit_price')  # ASC
+    p3 = Product.objects.latest('unit_price')  # DSC
+
+    # Limiting results
+    qs12 = Product.objects.all()[:5]  # 0 1 2 3 4
+    qs13 = Product.objects.all()[5:10]  # 5 6 7 8 9
 
     return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs5)})
