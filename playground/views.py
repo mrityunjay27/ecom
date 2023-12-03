@@ -1,8 +1,9 @@
+from django.db.models.functions import Concat
 from django.shortcuts import render
 from django.http import HttpResponse
-from store.models import Product, OrderItem, Order
+from store.models import Product, OrderItem, Order, Customer
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F
+from django.db.models import Q, F, Value, Func
 from django.db.models.aggregates import Count, Max, Sum, Avg
 
 
@@ -111,5 +112,21 @@ def say_hello(request):
     # Count return a dictionary {'id__count': 1000},
     # else we can use keyword argument to change key in dict in Aggregate function (count=Count('id'))
     qs22 = Product.objects.aggregate(Count('id'), min_price=Max('unit_price'))
+
+    # Annotate
+    # When we want to annotate the result that we have fetched from db
+    # This will create a new field is_new marked as 1, in SQL response
+    # This function takes expression (F, value, Q)
+    qs23 = Customer.objects.annotate(is_new=Value(True), new_id=F('id'))
+    list(qs23)
+
+    # Calling db functions (ex- CONCAT)
+    qs24 = Customer.objects.annotate(
+        full_name=Func(F('first_name'), Value(' '), F('last_name'), function='CONCAT')
+    )
+    qs25 = Customer.objects.annotate(
+        full_name=Concat('first_name', Value(' '), 'last_name')
+    )
+    list(qs24)
 
     return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
