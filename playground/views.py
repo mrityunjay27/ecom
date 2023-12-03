@@ -81,4 +81,13 @@ def say_hello(request):
     qs_order_items = OrderItem.objects.values('product_id').distinct()
     qs_product = Product.objects.filter(id__in=qs_order_items).order_by('title')
 
+    # Only, specifies field to read from db, it returns instances of the product class
+    # unlike values method which returns dict, Careful with it, as it return Product,
+    # and if you do product.unit_price, 100s of separate query will run to fetch unit price
+    # as it was not ask of original query statement
+    qs16 = Product.objects.only('id', 'title')
+
+    # Defer, specifies fields which we don't want to read from db, behaviour is same as only
+    qs17 = Product.objects.defer('title')
+
     return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs_product)})
