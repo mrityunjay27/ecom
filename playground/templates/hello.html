@@ -11,9 +11,10 @@
     <h1>Hello World</h1>
 {% endif %}
 <ul>
-    {% for o in orders %}
-    <li>{{ o.id }} - {{ o.customer.first_name }} </li>
-    {% endfor %}
+    {{ data }}
+<!--    {% for o in orders %}-->
+<!--    <li>{{ o.id }} - {{ o.customer.first_name }} </li>-->
+<!--    {% endfor %}-->
 </ul>
 </body>
 </html>

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from store.models import Product, OrderItem, Order
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F
+from django.db.models.aggregates import Count, Max, Sum, Avg
 
 
 # Create your views here.
@@ -106,4 +107,9 @@ def say_hello(request):
     # Ques: Get the last 5 orders with their customers and items (incl product)
     qs21 = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
 
-    return render(request, 'hello.html', {'name': 'Rambo', 'orders': list(qs21)})
+    # Aggregates-> all functions returns dict
+    # Count return a dictionary {'id__count': 1000},
+    # else we can use keyword argument to change key in dict in Aggregate function (count=Count('id'))
+    qs22 = Product.objects.aggregate(Count('id'), min_price=Max('unit_price'))
+
+    return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
