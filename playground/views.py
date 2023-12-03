@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from store.models import Product
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
+from django.db.models import Q, F
 
 
 # Create your views here.
@@ -51,5 +51,12 @@ def say_hello(request):
 
     # OR |, ~, &
     qs8 = Product.objects.filter(Q(inventory__lt=10) | ~Q(unit_price__lt=20))
+
+    # F class is used to reference particular field in model
+    # Get product where inventory = unit_price
+    qs9 = Product.objects.filter(inventory=F('unit_price'))
+    # also work for referencing related table's fields
+    qs10 = Product.objects.filter(inventory=F('collection__id'))
+
 
     return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs5)})
