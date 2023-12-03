@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from store.models import Product
+from store.models import Product, OrderItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F
 
@@ -69,4 +69,16 @@ def say_hello(request):
     qs12 = Product.objects.all()[:5]  # 0 1 2 3 4
     qs13 = Product.objects.all()[5:10]  # 5 6 7 8 9
 
-    return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs5)})
+    # Reading subset of fields in the table
+    # Returns all the product's id and title and collection's title
+    # This return a list of Dictionary Ex. {'id': 2, 'title': 'Apple', 'collection__title': 'Fruits'}  }
+    qs14 = Product.objects.values('id', 'title', 'collection__title')
+    # This returns list of tuples Ex. (2, 'Apple', 'Fruits')
+    qs15 = Product.objects.values_list('id', 'title', 'collection__title')
+
+    # Ques: Select products that have been ordered ad sort them by title
+    # This product_id field will automatically be generated at run time.
+    qs_order_items = OrderItem.objects.values('product_id').distinct()
+    qs_product = Product.objects.filter(id__in=qs_order_items).order_by('title')
+
+    return render(request, 'hello.html', {'name': 'Rambo', 'products': list(qs_product)})
