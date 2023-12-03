@@ -1,9 +1,8 @@
 from django.db.models.functions import Concat
 from django.shortcuts import render
-from django.http import HttpResponse
 from store.models import Product, OrderItem, Order, Customer
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F, Value, Func
+from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Count, Max, Sum, Avg
 
 
@@ -128,5 +127,16 @@ def say_hello(request):
         full_name=Concat('first_name', Value(' '), 'last_name')
     )
     list(qs24)
+
+    # Grouping object
+    # Number of order for each customer,
+    # Though we should have use order_set, but it throws an error
+    qs26 = Customer.objects.annotate(
+        order_count=Count('order')
+    )
+
+    # Expression wrapper
+    discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
+    qs27 = Customer.objects.annotate(discounted_price=discounted_price)
 
     return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
