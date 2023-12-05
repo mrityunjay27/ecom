@@ -1,6 +1,6 @@
 from django.db.models.functions import Concat
 from django.shortcuts import render
-from store.models import Product, OrderItem, Order, Customer
+from store.models import Product, OrderItem, Order, Customer, Collection
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Count, Max, Sum, Avg
@@ -140,7 +140,7 @@ def say_hello(request):
 
     # Expression wrapper
     discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
-    qs27 = Customer.objects.annotate(discounted_price=discounted_price)
+    qs27 = Product.objects.annotate(discounted_price=discounted_price)
 
     # Querying Generic relationships ( Tags)
     # We need to fetch id of Model from content_type table upon which we will query (say suppose Product)
@@ -164,5 +164,27 @@ def say_hello(request):
     # qs[1]
     # Only 1 query will run
 
+    # Creating Data
+    collection = Collection()
+    collection.title = 'Video Games'
+    collection.featured_product = Product(pk=1)
+    collection.save()
+
+    # OR
+    # collection = Collection.objects.create(title='a', featured_product_id=1)
+
+    # Update
+    col = Collection.objects.get(pk=11)
+    col.featured_product = None
+    col.save()
+
+    # OR
+    # Collection.objects.filter(pk=11).update(featured_product=None)
+
+    # Delete
+    # collection = Collection(pk=11)
+    # collection.delete()
+
+    # Collection.objects.filter(id__gt=5).delete()
 
     return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
