@@ -154,4 +154,15 @@ def say_hello(request):
             object_id=1  # 1 is product with id 1
         )
 
+    # Alternate way of writing above Query using Custom manager
+    TaggedItem.objects.get_tags_for(Product, 1)
+
+    # QuerySet Cacheing
+    # Django caches the result of query set in memory and returns it if same thing is called or used
+    # qs = Product......
+    # list(qs)
+    # qs[1]
+    # Only 1 query will run
+
+
     return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
