@@ -6,6 +6,7 @@ from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Count, Max, Sum, Avg
 from django.contrib.contenttypes.models import ContentType
 from tags.models import TaggedItem
+from django.db import transaction
 
 
 # Create your views here.
@@ -186,5 +187,21 @@ def say_hello(request):
     # collection.delete()
 
     # Collection.objects.filter(id__gt=5).delete()
+
+    # Transaction
+    # @transaction.atomic(), either use this decorator above function OR
+    # if something goes wrong in this function entire function will be rolled back
+    with transaction.atomic():
+        order = Order()
+        order.customer_id = 1
+        order.save()
+
+        item = OrderItem()
+        item.order = order
+        item.product_id = 1
+        item.quantity = 1
+        item.unit_price = 10
+        item.save()
+
 
     return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
