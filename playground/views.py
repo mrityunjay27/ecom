@@ -6,7 +6,7 @@ from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Count, Max, Sum, Avg
 from django.contrib.contenttypes.models import ContentType
 from tags.models import TaggedItem
-from django.db import transaction
+from django.db import transaction, connection
 
 
 # Create your views here.
@@ -203,5 +203,12 @@ def say_hello(request):
         item.unit_price = 10
         item.save()
 
+    # Raw SQL
+    # qs30 = Product.objects.raw('SELECT id, title FROM store_product')
+
+    # OR, this does not have model dependency
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT id, title FROM store_product')
+        # cursor.callproc('get_customer', [param1, param2...]) calling stored procedures
 
     return render(request, 'hello.html', {'name': 'Rambo', 'data': qs22})
