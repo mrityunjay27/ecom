@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
-
+from django.utils.html import format_html, urlencode
+from django.urls import reverse
 from . import models
 
 
@@ -49,7 +50,15 @@ class CollectionAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='products_count')
     def products_count(self, collection):
-        return collection.product_count
+        # reverse('admin:app_model_page')  Django function that gives the URL of page in admin interface (See syntax)
+        url = (
+                reverse('admin:store_product_changelist')
+                + '?'
+                + urlencode({'collection__id': str(collection.id)})
+            # attach query string to the url to filter product page for that collection only
+        )
+        return format_html('<a href={}>{}</a>', url, collection.product_count)
+        # return collection.product_count
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(
