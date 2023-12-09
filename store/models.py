@@ -16,6 +16,12 @@ class Collection(models.Model):
     # + sign indicate we don't care about reverse relation that will be created by Django in Product class.
     # because by featured_product, it will try to create a new field collection in Product, but we already have one.
 
+    def __str__(self) -> str:
+        return self.title
+
+    class Meta:
+        ordering = ['title']
+
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
@@ -26,6 +32,12 @@ class Product(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
+
+    def __str__(self) -> str:
+        return self.title
+
+    class Meta:
+        ordering = ['title']
 
 
 class Customer(models.Model):
