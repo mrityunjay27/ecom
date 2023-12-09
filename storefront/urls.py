@@ -18,6 +18,13 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
 
+# To create a new user
+# python manage.py createsuperuser
+
+# Customizing Admin Page
+admin.site.site_header = 'Storefront Admin'
+admin.site.index_title = 'Admin'
+
 # Route all the request starting with playground/.... to playground.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
