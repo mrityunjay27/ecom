@@ -27,10 +27,27 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'membership']
+    list_display = ['first_name', 'last_name', 'membership', 'order_count']
     list_editable = ['membership']
     list_per_page = 10
     ordering = ['first_name', 'last_name']
+
+    # ADD A COLUMN TO VIEW ORDER OF EACH CUSTOMER (LINK)
+    @admin.display(ordering='order_count')
+    def order_count(self, customer):
+        # reverse('admin:app_model_page')  Django function that gives the URL of page in admin interface (See syntax)
+        url = (
+                reverse('admin:store_order_changelist')
+                + '?'
+                + urlencode({'customer__id': str(customer.id)})
+        )
+        return format_html('<a href={}>{}</a>', url, customer.order_count)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(
+            order_count=Count('order')
+        )
+
 
 
 @admin.register(models.Order)
@@ -46,10 +63,10 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ['title', 'products_count']
+    list_display = ['title', 'product_count']
 
-    @admin.display(ordering='products_count')
-    def products_count(self, collection):
+    @admin.display(ordering='product_count')
+    def product_count(self, collection):
         # reverse('admin:app_model_page')  Django function that gives the URL of page in admin interface (See syntax)
         url = (
                 reverse('admin:store_product_changelist')
