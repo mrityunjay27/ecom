@@ -1,11 +1,26 @@
 from django.contrib import admin
-from django.db.models import Count
+from django.db.models import Count, QuerySet
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from . import models
 
 
-# Register your models here.
+#  Custom Filter
+class InventoryFilter(admin.SimpleListFilter):
+    title = 'inventory'
+    parameter_name = 'inventory'  # This will be part of query string
+
+    def lookups(self, request, model_admin):
+        return [
+            # (value, string to display)
+            ('<10', 'Low'),
+        ]
+
+    def queryset(self, request, queryset: QuerySet):
+        if self.value() == '<10':
+            return queryset.filter(inventory__lt=10)
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'unit_price', 'inventory_status', 'collection_title']
@@ -14,6 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
     # Reduces number of query by preloading
     # because we are doing product.collection.title
     list_select_related = ['collection']
+    list_filter = ['collection', 'last_update', InventoryFilter]
     search_fields = ['title']
 
     @admin.display(ordering='inventory')
