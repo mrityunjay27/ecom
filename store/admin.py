@@ -14,6 +14,7 @@ class ProductAdmin(admin.ModelAdmin):
     # Reduces number of query by preloading
     # because we are doing product.collection.title
     list_select_related = ['collection']
+    search_fields = ['title']
 
     @admin.display(ordering='inventory')
     def inventory_status(self, product):
@@ -31,6 +32,7 @@ class CustomerAdmin(admin.ModelAdmin):
     list_editable = ['membership']
     list_per_page = 10
     ordering = ['first_name', 'last_name']
+    search_fields = ['first_name__istartswith', ]
 
     # ADD A COLUMN TO VIEW ORDER OF EACH CUSTOMER (LINK)
     @admin.display(ordering='order_count')
@@ -49,11 +51,20 @@ class CustomerAdmin(admin.ModelAdmin):
         )
 
 
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ['product']
+    min_num = 1
+    max_num = 10
+    model = models.OrderItem
+    extra = 0  # Don't show extra rows while adding new product to order
+
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'placed_at', 'customer']
     list_per_page = 10
+    autocomplete_fields = ['customer']
+    inlines = [OrderItemInline]
 
 
 # By registering model to admin we can access it from admin interface
