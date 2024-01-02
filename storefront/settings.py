@@ -34,9 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions', # Deprecated
+    'django.contrib.sessions',  # Deprecated
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'playground',
     'debug_toolbar',
     'store',
