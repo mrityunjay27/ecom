@@ -1,0 +1,15 @@
+REST Framework works on three basic principle
+1. Resource - Object in our application like products, cart, collection. We can identify the resource using URLs.
+    http://localhost:3000/products
+    http://localhost:3000/products/1
+    http://localhost:3000/products/1/reviews
+    http://localhost:3000/products/1/reviews/1
+
+2. Representation: How we represent our resource to client.
+    HTML, XML or JSON
+    In server, we represent resources by objects
+
+3. HTTP Methods
+   They help in telling the server what to do with the resource
+   GET, POST, PUT, PATCH, DELETE
+   PUT vs PATCH, if we want to update all the properties(PUT) or subset of property
