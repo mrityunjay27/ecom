@@ -20,3 +20,8 @@ Installing Django Rest Framework - pip install djangorestframework
   to HttpResponse and HttpRequest objects from django, which is powerful and easy to use.
   api_view decorator is used to mark a function to use rest.
 
+Aim is to convert Product object -> JSON object
+* Serializer converts a model instance to a dictionary.
+* JSONRenderer is class in Rest framework which as a method
+  render(dict) -> json object.
+
