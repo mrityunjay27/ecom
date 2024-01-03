@@ -18,7 +18,7 @@ def product_list(request):
     :param request:
     :return:
     """
-    queryset = Product.objects.all()
+    queryset = Product.objects.select_related('collection').all()
     serializer = ProductSerializer(queryset, many=True)
     return Response(serializer.data)
 
