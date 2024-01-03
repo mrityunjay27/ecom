@@ -25,3 +25,7 @@ Aim is to convert Product object -> JSON object
 * JSONRenderer is class in Rest framework which as a method
   render(dict) -> json object.
 
+* API Model(Interface) != Data Model(Implementation)
+
+
+
