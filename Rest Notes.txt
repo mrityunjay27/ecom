@@ -27,5 +27,11 @@ Aim is to convert Product object -> JSON object
 
 * API Model(Interface) != Data Model(Implementation)
 
+* Serializing Relationship
+    Primary Key
+    String
+    Nested Object
+    Hyperlink
+
 
 
