@@ -33,5 +33,9 @@ Aim is to convert Product object -> JSON object
     Nested Object
     Hyperlink
 
+* Model Serializer are used to reduce the effort to write serializer for each model.
+
+* Creating a product (Deserializing objects)
+ POST /products
 
 
