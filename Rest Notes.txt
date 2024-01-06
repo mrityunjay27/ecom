@@ -38,4 +38,7 @@ Aim is to convert Product object -> JSON object
 * Creating a product (Deserializing objects)
  POST /products
 
+ * For extra validation apart from that is done at model validation level from is_valid method,
+    we can override it.
+
 

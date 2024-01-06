@@ -24,6 +24,11 @@ def product_list(request):
         return Response(serializer.data)
     elif request.method == 'POST':
         serializer = ProductSerializer(data=request.data)  # This deserializes the data
+        # Data from client has to be validated before accessing
+        serializer.is_valid(raise_exception=True)
+        # print(serializer.validated_data)
+        # For extra validation apart from that is done at model validation level from is_valid method,
+        # we can override it.
 
         return Response("OK")
 
