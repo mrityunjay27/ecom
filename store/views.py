@@ -17,6 +17,15 @@ def product_list(request):
     localhost:3000/store/products/
     :param request:
     :return:
+    Sample payload for creating a product
+    {
+        "title": "7up Diet, 355 Ml",
+        "description": "suspendisse",
+        "slug": "-",
+        "inventory": 0,
+        "unit_price": 79.07,
+        "collection": 5
+    }
     """
     if request.method == 'GET':
         queryset = Product.objects.select_related('collection').all()
@@ -26,6 +35,7 @@ def product_list(request):
         serializer = ProductSerializer(data=request.data)  # This deserializes the data
         # Data from client has to be validated before accessing
         serializer.is_valid(raise_exception=True)
+        serializer.save()
         # print(serializer.validated_data)
         # For extra validation apart from that is done at model validation level from is_valid method,
         # we can override it.

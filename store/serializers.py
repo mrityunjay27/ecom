@@ -15,7 +15,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'title', 'unit_price', 'price_with_tax', 'collection']
+        fields = ['id', 'title', 'description', 'slug', 'inventory', 'unit_price', 'price_with_tax', 'collection']
 
     # id = serializers.IntegerField()
     # title = serializers.CharField(max_length=255)
@@ -32,7 +32,23 @@ class ProductSerializer(serializers.ModelSerializer):
 
     # That's how validate method is overriden to have extra validation
     # (Not written in context of product serializer)
-    def validate(self, data):
-        if data['password'] != data['confirm_password']:
-            return serializers.ValidationError("Password do not match")
-        return data
+    # def validate(self, data):
+    #     if data['password'] != data['confirm_password']:
+    #         return serializers.ValidationError("Password do not match")
+    #     return data
+
+    # We can override how the product is created, like if we want to set some attributes.
+
+    # save method of ModelSerializer will call any of the below two methods
+    # depending upon state of serializer
+    # def create(self, validated_data):
+    #     product = Product(**validated_data)
+    #     product.some_field = "value"
+    #     product.save()
+    #     return product
+
+    # Similarly for update
+    # def update(self, instance, validated_data):
+    #     instance.unit_price = validated_data.get('unit_price')
+    #     instance.save()
+    #     return instance
