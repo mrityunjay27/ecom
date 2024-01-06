@@ -40,10 +40,10 @@ def product_list(request):
         # For extra validation apart from that is done at model validation level from is_valid method,
         # we can override it.
 
-        return Response("OK")
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view()
+@api_view(['GET', 'PUT'])
 def product_detail(request, id):
     """
     Handle requests like
@@ -52,19 +52,25 @@ def product_detail(request, id):
     :param id:
     :return:
     """
-    try:
-        product = Product.objects.get(pk=id)
-        # Moment we create below serializer object it converts product object to dictionary
-        serializer = ProductSerializer(product)
-        # Then behind the scene django will convert dictionary to json object and will be returned.
-        return Response(serializer.data)
-    except Product.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+    # try:
+    #     product = Product.objects.get(pk=id)
+    #     # Moment we create below serializer object it converts product object to dictionary
+    #     serializer = ProductSerializer(product)
+    #     # Then behind the scene django will convert dictionary to json object and will be returned.
+    #     return Response(serializer.data)
+    # except Product.DoesNotExist:
+    #     return Response(status=status.HTTP_404_NOT_FOUND)
 
-    # ************* #
-    # product = get_object_or_404(Product, pk=id)
-    # serializer = ProductSerializer(product)
-    # return Response(serializer.data)
+    product = get_object_or_404(Product, pk=id)
+    if request.method == 'GET':
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        # product instance has to be passed while updating
+        serializer = ProductSerializer(product, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view()
