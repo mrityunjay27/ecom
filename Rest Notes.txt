@@ -41,4 +41,6 @@ Aim is to convert Product object -> JSON object
  * For extra validation apart from that is done at model validation level from is_valid method,
     we can override it.
 
+* Class based views are a alternate way of function based views. define get(), post(), put(), delete() function
+  inside those classes and change the url patterns accordingly (See this commit).
 
