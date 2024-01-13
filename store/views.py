@@ -163,3 +163,9 @@ def collection_list(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CollectionList(ListCreateAPIView):
+    serializer_class = CollectionSerializer
+    queryset = queryset = Collection.objects.annotate(products_count=Count('products')).all()
+
