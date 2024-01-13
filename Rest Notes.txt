@@ -58,3 +58,6 @@ Aim is to convert Product object -> JSON object
   is used to combine similar views ( ProductList and ProductDetail together as ProductViewSet)
   that have common code
 
+*   When using viewset we don't register url patterns
+    To register view set routers are used so they generate url patterns for us
+
