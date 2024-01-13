@@ -54,5 +54,7 @@ Aim is to convert Product object -> JSON object
 
   Inorder to use them, need to override two methods get_queryset(), get_serializer_class()
 
-
+* ViewSet- Set of related views.
+  is used to combine similar views ( ProductList and ProductDetail together as ProductViewSet)
+  that have common code
 

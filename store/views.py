@@ -8,11 +8,28 @@ from .models import Product, Collection
 from .serializers import ProductSerializer, CollectionSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 
 
 # Create your views here.
+class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def delete(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        if product.orderitems.count() > 0:
+            return Response({"error": "Product is linked to order item. Hence, cannot be deleted."},
+                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class ProductList(ListCreateAPIView):
-    queryset = Product.objects.select_related('collection').all()
+    queryset = Product.objects.all()  # changed because that was being used when we had to display collection name
     serializer_class = ProductSerializer
 
     # Used instead of above fields if we have some logic for queryset.
@@ -44,6 +61,7 @@ class ProductListv2(APIView):
 class ProductDetail(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
     # lookup_field = 'id' or change id at url pattern because Mixin expects pk
 
     def delete(self, request, pk):
@@ -196,3 +214,13 @@ class CollectionDetail(RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class CollectionViewSet(ModelViewSet):
+    queryset = queryset = Collection.objects.annotate(products_count=Count('products')).all()
+    serializer_class = CollectionSerializer
+
+    def delete(self, request, pk):
+        collection = get_object_or_404(Collection, pk=pk)
+        if collection.products.count() > 0:
+            return Response({'error': 'Is linked with product'}, status=status.HTTP_404_NOT_FOUND)
+        collection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
