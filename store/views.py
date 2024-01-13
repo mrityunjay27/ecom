@@ -7,10 +7,28 @@ from rest_framework import status
 from .models import Product, Collection
 from .serializers import ProductSerializer, CollectionSerializer
 from rest_framework.views import APIView
+from rest_framework.generics import ListCreateAPIView
 
 
 # Create your views here.
-class ProductList(APIView):
+class ProductList(ListCreateAPIView):
+    queryset = Product.objects.select_related('collection').all()
+    serializer_class = ProductSerializer
+
+    # Used instead of above fields if we have some logic for queryset.
+
+    # def get_queryset(self):
+    #     return Product.objects.select_related('collection').all()
+    #
+    # def get_serializer_class(self):
+    #     return ProductSerializer
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+
+class ProductListv2(APIView):
+    # using ProductList generic views now.
     def get(self, request):
         queryset = Product.objects.select_related('collection').all()
         serializer = ProductSerializer(queryset, many=True, context={'request': request})

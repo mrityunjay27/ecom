@@ -44,3 +44,15 @@ Aim is to convert Product object -> JSON object
 * Class based views are a alternate way of function based views. define get(), post(), put(), delete() function
   inside those classes and change the url patterns accordingly (See this commit).
 
+* Mixin is a class which encapsulates pattern of code.
+    ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, etc.
+
+* But we don't use them directly. Concreate View classes are used.
+  That essentially, combinations of Mixins eg. ListCreateAPIView.
+
+  ListCreateAPIView inherits from ListModelMixin and CreateModelMixin mixins.
+
+  Inorder to use them, need to override two methods get_queryset(), get_serializer_class()
+
+
+
