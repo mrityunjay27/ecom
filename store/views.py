@@ -7,7 +7,7 @@ from rest_framework import status
 from .models import Product, Collection
 from .serializers import ProductSerializer, CollectionSerializer
 from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
 # Create your views here.
@@ -41,7 +41,21 @@ class ProductListv2(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class ProductDetail(APIView):
+class ProductDetail(RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    # lookup_field = 'id' or change id at url pattern because Mixin expects pk
+
+    def delete(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        if product.orderitems.count() > 0:
+            return Response({"error": "Product is linked to order item. Hence, cannot be deleted."},
+                            status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProductDetailV2(APIView):
     def get(self, request, id):
         product = get_object_or_404(Product, pk=id)
         serializer = ProductSerializer(product)
