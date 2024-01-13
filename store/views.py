@@ -183,3 +183,16 @@ class CollectionList(ListCreateAPIView):
     serializer_class = CollectionSerializer
     queryset = queryset = Collection.objects.annotate(products_count=Count('products')).all()
 
+
+class CollectionDetail(RetrieveUpdateDestroyAPIView):
+    queryset = queryset = Collection.objects.annotate(products_count=Count('products')).all()
+    serializer_class = CollectionSerializer
+
+    def delete(self, request, pk):
+        collection = get_object_or_404(Collection, pk=pk)
+        if collection.products.count() > 0:
+            return Response({'error': 'Is linked with product'}, status=status.HTTP_404_NOT_FOUND)
+        collection.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
