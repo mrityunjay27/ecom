@@ -10,6 +10,7 @@ mysql = "*"
 mysql-connector-python = "*"
 mysqlclient = "*"
 drf-nested-routers = "*"
+django-filter = "*"
 
 [dev-packages]
 

@@ -76,3 +76,7 @@ Aim is to convert Product object -> JSON object
     In our case domain is products and nameserver is reviews.
     pipenv install drf-nested-routers
 
+
+* To filter a model on multiple fields, use pipenv install django-filter
+  Multiple filters can't be handled properly by writing get_queryset method.
+
