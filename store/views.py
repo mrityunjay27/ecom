@@ -1,6 +1,7 @@
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from .models import Product, Collection, OrderItem, Review
+from .pagination import DefaultPagination
 from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 from .filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -23,7 +24,7 @@ class ProductViewSet(ModelViewSet):
     filterset_class = ProductFilter
     search_fields = ['title', 'description', 'collection__title']
     ordering_fields = ['unit_price', 'last_update']
-    pagination_class = PageNumberPagination  # Either this should be written to allow page in product
+    pagination_class = DefaultPagination  # Either this should be written to allow page in product
     # or do global in settings.py
 
     # def get_queryset(self):
