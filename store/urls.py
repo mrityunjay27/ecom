@@ -6,7 +6,7 @@ from rest_framework_nested import routers
 # Parent routers
 router = routers.DefaultRouter()  # with this we can hit http://127.0.0.1:8000/store
 # router = SimpleRouter()
-router.register('products', views.ProductViewSet)
+router.register('products', views.ProductViewSet, basename='products')  # will create url patterns like product-list, product-detail
 router.register('collections', views.CollectionViewSet)
 # pprint(router.urls)  # This contains url patterns, will generate 4 endpoint as defined below.
 
