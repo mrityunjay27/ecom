@@ -61,3 +61,18 @@ Aim is to convert Product object -> JSON object
 *   When using viewset we don't register url patterns
     To register view set routers are used so they generate url patterns for us
 
+* Nested resources are needed for full REST URL structure, if one resource lives inside another.
+    The following example is about Domains and DNS Nameservers. There are many domains,
+    and each domain has many nameservers. The "nameserver" resource does not exist without a domain,
+    so you need it "nested" inside the domain.
+    Help: https://github.com/alanjds/drf-nested-routers
+    The desired URL signatures are:
+
+    /domain/ <- Domains list
+    /domain/{pk}/ <- One domain, from {pk}
+    /domain/{domain_pk}/nameservers/ <- Nameservers of domain from {domain_pk}
+    /domain/{domain_pk}/nameservers/{pk} <- Specific nameserver from {pk}, of domain from {domain_pk}
+
+    In our case domain is products and nameserver is reviews.
+    pipenv install drf-nested-routers
+

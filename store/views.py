@@ -225,5 +225,22 @@ class CollectionViewSet(ModelViewSet):
 
 
 class ReviewViewSet(ModelViewSet):
-    queryset = Review.objects.all()
+    # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    def get_queryset(self):
+        """
+        Need to override because Review.objects.all() is giving
+        all reviews whatever product's review we open.
+        :return:
+        """
+        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+
+    def get_serializer_context(self):
+        """
+        Function to let user not to pass product id
+        while creating a new review and fetch from the url.
+        kwargs['product_pk'] is lookup field defined
+        :return:
+        """
+        return {'product_id': self.kwargs['product_pk']}

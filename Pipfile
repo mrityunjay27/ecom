@@ -9,6 +9,7 @@ django-debug-toolbar = "*"
 mysql = "*"
 mysql-connector-python = "*"
 mysqlclient = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
