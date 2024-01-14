@@ -4,7 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from .filters import ProductFilter
 from .models import Product, Collection, OrderItem, Review
 from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
@@ -17,10 +17,11 @@ from rest_framework.viewsets import ModelViewSet
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     # filterset_fields = ['collection_id', 'unit_price']
     filterset_class = ProductFilter
     search_fields = ['title', 'description', 'collection__title']
+    ordering_fields = ['unit_price', 'last_update']
 
     # def get_queryset(self):
     #     queryset = Product.objects.all()
