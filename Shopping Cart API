@@ -1,0 +1,21 @@
+Operations
+1. Create a cart
+    POST /carts/   Payload- {}  Response- cart
+2. Add item to a cart
+    POST /carts/:id/items   Payload- {prodId, qty}  Response- item
+3. Update the quantity of items
+    PATCH /carts/:id/items/:id   Payload- {qty}  Response- {qty}
+4. Remove items from a cart
+    DELETE /carts/:id/items/:id     Payload- {}  Response {}
+5. Get a cart with its item
+    GET /carts/:id  Payload- {} Response- cart
+6. Delete a cart
+    DELETE /carts/:id  Payload- {} Response- cart
+
+CartViewSet
+    /carts
+    /carts/:id
+
+CartItemViewSet
+    /carts/:id/items
+    /carts/:id/items/:id
