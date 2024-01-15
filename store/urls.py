@@ -8,6 +8,7 @@ router = routers.DefaultRouter()  # with this we can hit http://127.0.0.1:8000/s
 # router = SimpleRouter()
 router.register('products', views.ProductViewSet, basename='products')  # will create url patterns like product-list, product-detail
 router.register('collections', views.CollectionViewSet)
+router.register('carts', views.CartViewSet)
 # pprint(router.urls)  # This contains url patterns, will generate 4 endpoint as defined below.
 
 # Child routers

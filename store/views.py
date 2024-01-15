@@ -1,8 +1,8 @@
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
-from .models import Product, Collection, OrderItem, Review
+from .models import Product, Collection, OrderItem, Review, Cart
 from .pagination import DefaultPagination
-from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
+from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer
 from .filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
@@ -12,7 +12,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.mixins import CreateModelMixin
 
 
 # Create your views here.
@@ -263,3 +264,15 @@ class ReviewViewSet(ModelViewSet):
         :return:
         """
         return {'product_id': self.kwargs['product_pk']}
+
+
+class CartViewSet(CreateModelMixin, GenericViewSet):
+    """
+    Not extending from ModelViewSet like other view set
+    because it will include all the operations.
+    Ex- We don't want to list all the carts.
+    Ex- We don't want to update a cart
+    We will use custom view set.
+    """
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
