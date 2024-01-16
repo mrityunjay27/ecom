@@ -274,5 +274,5 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
     Ex- We don't want to update a cart
     We will use custom view set.
     """
-    queryset = Cart.objects.all()
+    queryset = Cart.objects.prefetch_related('items__product').all()   # used prefetch to reduce number of queries, because of multiple queries being made for unit_price
     serializer_class = CartSerializer
