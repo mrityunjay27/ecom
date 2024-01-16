@@ -13,7 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin
 
 
 # Create your views here.
@@ -266,7 +266,7 @@ class ReviewViewSet(ModelViewSet):
         return {'product_id': self.kwargs['product_pk']}
 
 
-class CartViewSet(CreateModelMixin, RetrieveModelMixin, GenericViewSet):
+class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet):
     """
     Not extending from ModelViewSet like other view set
     because it will include all the operations.
