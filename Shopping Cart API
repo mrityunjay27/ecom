@@ -3,6 +3,7 @@ Operations
     POST /carts/   Payload- {}  Response- cart
 2. Add item to a cart
     POST /carts/:id/items   Payload- {prodId, qty}  Response- item
+    GET /carts/:id/items , to list all the items in the cart.
 3. Update the quantity of items
     PATCH /carts/:id/items/:id   Payload- {qty}  Response- {qty}
 4. Remove items from a cart

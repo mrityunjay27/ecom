@@ -1,8 +1,8 @@
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
-from .models import Product, Collection, OrderItem, Review, Cart
+from .models import Product, Collection, OrderItem, Review, Cart, CartItem
 from .pagination import DefaultPagination
-from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer
+from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSerializer
 from .filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
@@ -26,6 +26,7 @@ class ProductViewSet(ModelViewSet):
     search_fields = ['title', 'description', 'collection__title']
     ordering_fields = ['unit_price', 'last_update']
     pagination_class = DefaultPagination  # Either this should be written to allow page in product
+
     # or do global in settings.py
 
     # def get_queryset(self):
@@ -274,5 +275,15 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
     Ex- We don't want to update a cart
     We will use custom view set.
     """
-    queryset = Cart.objects.prefetch_related('items__product').all()   # used prefetch to reduce number of queries, because of multiple queries being made for unit_price
+    queryset = Cart.objects.prefetch_related(
+        'items__product').all()  # used prefetch to reduce number of queries, because of multiple queries being made for unit_price
     serializer_class = CartSerializer
+
+
+class CartItemViewSet(ModelViewSet):
+    serializer_class = CartItemSerializer
+
+    def get_queryset(self):
+        return CartItem.objects\
+            .filter(cart_id=self.kwargs['cart_pk']) \
+            .select_related('product')

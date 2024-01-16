@@ -17,8 +17,11 @@ product_router = routers.NestedDefaultRouter(router, 'products', lookup='product
 # register child resource
 product_router.register('reviews', views.ReviewViewSet, basename='product-reviews')
 
+cart_router = routers.NestedDefaultRouter(router, 'carts', lookup='cart')  # will create lookup param cart_pk
+cart_router.register('items', views.CartItemViewSet, basename='cart-items')
 
-urlpatterns = router.urls + product_router.urls
+
+urlpatterns = router.urls + product_router.urls + cart_router.urls
 
 # urlpatterns = [
 #     path('', include(router.urls)),
