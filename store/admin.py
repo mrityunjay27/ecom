@@ -126,3 +126,13 @@ class CollectionAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(
             product_count=Count('products')
         )
+
+
+@admin.register(models.Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['id']
+
+
+@admin.register(models.CartItem)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['cart', 'product', 'quantity']
