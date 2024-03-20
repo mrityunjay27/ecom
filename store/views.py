@@ -2,7 +2,8 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from .models import Product, Collection, OrderItem, Review, Cart, CartItem
 from .pagination import DefaultPagination
-from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSerializer
+from .serializers import ProductSerializer, CollectionSerializer, ReviewSerializer, CartSerializer, CartItemSerializer, \
+    AddCartItemSerializer
 from .filters import ProductFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
@@ -281,9 +282,22 @@ class CartViewSet(CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, Gener
 
 
 class CartItemViewSet(ModelViewSet):
-    serializer_class = CartItemSerializer
+    # serializer_class = CartItemSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AddCartItemSerializer
+        return CartItemSerializer
+
+    def get_serializer_context(self):
+        """
+        To fetch the cart id to pass
+        in save method in AddCartItemSerializer
+        :return:
+        """
+        return {'cart_id': self.kwargs['cart_pk']}
 
     def get_queryset(self):
-        return CartItem.objects\
+        return CartItem.objects \
             .filter(cart_id=self.kwargs['cart_pk']) \
             .select_related('product')

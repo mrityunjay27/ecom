@@ -94,3 +94,45 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'items', 'total_price']  # items is a related-name given to cart item's field cart
+
+
+# We need a new serializer because for adding and updating item in the cart.
+# Because: if we change current CartItemSerializer by adding product_id in fields and mark product as read_only=True,
+# it will be work for adding the item,
+# but not for updating qty because we don't want to pass it while updating.
+
+class AddCartItemSerializer(serializers.ModelSerializer):
+    product_id = serializers.IntegerField()
+
+    def validate_product_id(self, value):
+        """
+        validates data that is coming from
+        serializer to add item to cart
+        :param value:
+        :return:
+        """
+        if not Product.objects.filter(pk=value).exists():
+            raise serializers.ValidationError('No product found with this id')
+        return value
+
+    # Need to re-implement save method because we have some custom logic when adding duplicate item to the cart.
+    def save(self, **kwargs):
+        cart_id = self.context['cart_id']
+        product_id = self.validated_data['product_id']
+        quantity = self.validated_data['quantity']
+
+        try:
+            cart_item = CartItem.objects.get(cart_id=cart_id, product_id=product_id)
+            # Updating an existing item
+            cart_item.quantity += quantity
+            cart_item.save()
+            self.instance = cart_id  # convention of save method
+        except CartItem.DoesNotExist:
+            # Creating a new item
+            self.instance = CartItem.objects.create(cart_id=cart_id, **self.validated_data)
+
+        return self.instance
+
+    class Meta:
+        model = CartItem
+        fields = ['id', 'product_id', 'quantity']
