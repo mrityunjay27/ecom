@@ -1,0 +1,14 @@
+******Customizing Django's User Model*******
+
+1. Extend User - Use-case:  For storing attribute related to authentication
+In this same table is used for extra attributes
+        User
+         ^
+         |
+         |
+       AppUser
+
+2. Create Profile (Composition) - For storing non-auth related attributes like dob, address.
+In this a new table is created and foreign keyed to User table
+
+    Profile ---> User

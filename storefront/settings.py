@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'store_custom',
 ]
 
+# Middlewares are function that takes request and either pass to other middleware or return.
+# Django runs the request through these middlewares before it reaches to their corresponding view.
+# For example: AuthenticationMiddleware read user information from request and sets request.user attribute
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
